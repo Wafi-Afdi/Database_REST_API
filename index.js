@@ -4,6 +4,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const errorHandler = require("./middleware/errorHandler")
+const db = require("./config/koneksi-db")
 
 const PORT = 3500;
 const app = express();
