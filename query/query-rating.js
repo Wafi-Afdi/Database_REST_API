@@ -57,7 +57,7 @@ const updateRating = async (input) => {
         const updateQuery = `
             UPDATE public.rating_buku SET rating = $1, review_tulisan = $2, last_updated = $3 WHERE id_buku = $4 AND id_user = $5;
         `;
-        const values = [input.rating, input.review_tulisan, input.review_tulisan, new Date(), input.id_buku, input.id_user];
+        const values = [input.rating, input.review_tulisan, new Date(), input.id_buku, input.id_user];
         const res = await client.query(updateQuery, values);
         await client.query("COMMIT")
         client.release();

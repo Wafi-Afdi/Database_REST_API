@@ -81,6 +81,7 @@ const patchRating = asyncHandler(async(req,res,next) => {
         id_user : id user pada db
         rating : 0 - 100
         review_tulisan (String)
+        id_rating
     */
     const { id_buku, id_user, rating, review_tulisan } = req.body;
     const adaBuku = await queryBuku.checkBukuPadaDB(id_buku);
@@ -90,7 +91,7 @@ const patchRating = asyncHandler(async(req,res,next) => {
     if(!adaBuku) {
         return res.status(400).json({message : "id buku tidak valid"})
     }
-    const result = await queryRating.patchRating({id_buku, id_user, rating, review_tulisan});
+    const result = await queryRating.updateRating({id_buku, id_user, rating, review_tulisan});
     if(result.error) {
         return res.status(400).json({message : result.error?.message})
     }
@@ -105,9 +106,6 @@ const deleteRating = asyncHandler(async(req,res,next) => {
     */
     const { id_buku, id_user } = req.body;
     const adaBuku = await queryBuku.checkBukuPadaDB(id_buku);
-    if(!(rating >= 0 && rating  <=100)) {
-        return res.status(400).json({message : "nilai rating tidak valid"})
-    }
     if(!adaBuku) {
         return res.status(400).json({message : "id buku tidak valid"})
     }
@@ -115,7 +113,7 @@ const deleteRating = asyncHandler(async(req,res,next) => {
     if(result.error) {
         return res.status(400).json({message : result.error?.message})
     }
-    res.status(201).json({"message" : "rating berhasil diubah"})
+    res.status(201).json({"message" : "rating berhasil dihapus"})
 })
 
 

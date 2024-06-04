@@ -70,10 +70,10 @@ const getDataBukuDanHarga = asyncHandler(async(req,res,next) => {
         id : id dari buku di db
     */
     const {id} = req.params;
-    if(id) {
+    if(!id) {
         return res.status(400).json({message : "id buku harus ada"})
     }
-    const result = await queryBuku.getDataBukuDanHarga(id);
+    const result = await queryBuku.queryDataHarga(id);
     if(result.error) {
         return res.status(400).json({message : result.error?.message})
     }
