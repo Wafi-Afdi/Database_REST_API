@@ -10,7 +10,7 @@ router.delete("/wishlist", userController.deleteWishlist)
 
 
 router.post("/buku/rating", userController.addRating)
-router.delete("/buku/rating", userController.addWishlist)
-router.patch("/buku/rating", userController.addWishlist)
+router.delete("/buku/rating", userController.deleteRating)
+router.patch("/buku/rating", userController.patchRating)
 
 module.exports = router;

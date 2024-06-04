@@ -31,6 +31,46 @@ const addRatingQuery = async (input) => {
     }
 }
 
+const deleteRating = async (input) => {
+    const client = await db.connect();
+    try {
+        await client.query("BEGIN")
+        const deleteQuery = `
+            DELETE FROM public.rating_buku WHERE id_user = $1 AND id_buku = $2;
+        `;
+        const values = [input.id_user, input.id_buku];
+        const res = await client.query(deleteQuery, values);
+        await client.query("COMMIT")
+        client.release();
+        return res;
+    } catch (error) {
+        client.query("ROLLBACK")
+        client.release();
+        throw Error(error)
+    }
+}
+
+const updateRating = async (input) => {
+    const client = await db.connect();
+    try {
+        await client.query("BEGIN")
+        const updateQuery = `
+            UPDATE public.rating_buku SET rating = $1, review_tulisan = $2, last_updated = $3 WHERE id_buku = $4 AND id_user = $5;
+        `;
+        const values = [input.rating, input.review_tulisan, input.review_tulisan, new Date(), input.id_buku, input.id_user];
+        const res = await client.query(updateQuery, values);
+        await client.query("COMMIT")
+        client.release();
+        return res;
+    } catch (error) {
+        client.query("ROLLBACK")
+        client.release();
+        throw Error(error)
+    }
+}
+
 module.exports = {
-    addRatingQuery
+    addRatingQuery,
+    updateRating,
+    deleteRating
 }
