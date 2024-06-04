@@ -64,9 +64,26 @@ const insertBuku = asyncHandler(async(req,res,next) => {
     res.status(201).json({"message": "buku berhasil masuk database"})
 })
 
+const getDataBukuDanHarga = asyncHandler(async(req,res,next) => {
+    /*
+        Ekspetasi params :
+        id : id dari buku di db
+    */
+    const {id} = req.params;
+    if(id) {
+        return res.status(400).json({message : "id buku harus ada"})
+    }
+    const result = await queryBuku.getDataBukuDanHarga(id);
+    if(result.error) {
+        return res.status(400).json({message : result.error?.message})
+    }
+    res.status(201).json({"daftar_harga" : result.rows})
+})
+
 module.exports = {
     getBukuByPenulisId,
     getBukuByPenerbitId,
     searchBuku,
-    insertBuku
+    insertBuku,
+    getDataBukuDanHarga
 }

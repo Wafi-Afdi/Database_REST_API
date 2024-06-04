@@ -106,10 +106,29 @@ const insertBukuBaru = async ({id_penulis, id_penerbit, nama_buku, isbn, tanggal
     }
 }
 
+const queryDataHarga = async (id_buku) => {
+    const client = await db.connect();
+    let query;
+    try {
+        // untuk buku
+        query = `
+            SELECT * FROM public.promo_buku WHERE id_buku = $1
+        ;`
+        const resultQuery = await client.query(query, [id_buku])
+        //console.log(resultQuery)
+        client.release();
+        return resultQuery
+    } catch (error) {
+        client.release();
+        throw Error(error.message)
+    }
+}
+
 module.exports = {
     checkBukuPadaDB,
     queryBukuByPenulis,
     queryBukuByPenerbit,
     searchBuku,
-    insertBukuBaru
+    insertBukuBaru,
+    queryDataHarga
 }
