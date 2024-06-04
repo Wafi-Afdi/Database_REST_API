@@ -30,8 +30,27 @@ const addWishlistQuery = async (input) => {
     }
 }
 
+const deleteWishlist = async (input) => {
+    const client = await db.connect();
+    try {
+        await client.query("BEGIN")
+        const deleteQuery = `
+            DELETE FROM public.wishlist WHERE id_user = $1 AND id_buku = $2;
+        `;
+        const values = [input.id_user, input.id_buku];
+        const res = await client.query(deleteQuery, values);
+        await client.query("COMMIT")
+        client.release();
+        return res;
+    } catch (error) {
+        client.query("ROLLBACK")
+        client.release();
+        throw Error(error)
+    }
+}
 
 
 module.exports = {
-    addWishlistQuery
+    addWishlistQuery,
+    deleteWishlist
 }

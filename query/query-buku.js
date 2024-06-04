@@ -50,8 +50,66 @@ const queryBukuByPenerbit = async (id) => {
     }
 }
 
+const searchBuku = async (q) => {
+    const client = await db.connect();
+    let query;
+    try {
+        let resultQuery;
+        if(!q) {
+            query = `SELECT * FROM public.buku;`
+            resultQuery = await client.query(query, [q]);
+        }
+        else {
+            query = `
+                SELECT * FROM public.buku WHERE judul ILIKE $1
+            ;`
+            resultQuery = await client.query(query, [`%${q.toLowerCase()}%`]);
+        }
+        client.release();
+        return resultQuery
+    } catch (error) {
+        client.release()
+        throw Error(error.message)
+    }
+}
+
+const insertBukuBaru = async ({id_penulis, id_penerbit, nama_buku, isbn, tanggal_rilis, halaman, foto}) => {
+    const client = await db.connect();
+    let query, query2;
+    try {
+        await client.query("BEGIN")
+        // untuk buku
+        query = `
+            INSERT INTO public.buku (judul, isbn, tanggal_rilis, halaman, foto, penerbit)
+            VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;
+        ;`
+        query2 = `INSERT INTO public.relasi_penulis_buku (id_buku, id_penulis) VALUES`
+        const resultQuery = await client.query(query, [nama_buku, isbn, tanggal_rilis, halaman, foto, id_penerbit])
+        //console.log(resultQuery)
+        let id_buku = resultQuery.rows[0].id;
+
+        for(let i = 0; i < id_penulis.length; i++) {
+            if(i == id_penulis.length - 1) {
+                query2 += `(${id_buku}, ${id_penulis});`
+
+            }
+            else query2 += `(${id_buku}, ${id_penulis}),`
+        }
+        await client.query(query2)
+        await client.query("COMMIT")
+        client.release();
+        return true
+    } catch (error) {
+        client.query("ROLLBACK")
+        client.release();
+        throw Error(error.message)
+    }
+}
+
 module.exports = {
     checkBukuPadaDB,
     queryBukuByPenulis,
-    queryBukuByPenerbit
+    queryBukuByPenerbit,
+    searchBuku,
+    insertBukuBaru
 }

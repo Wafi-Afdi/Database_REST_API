@@ -33,6 +33,24 @@ const addWishlist = asyncHandler(async(req,res,next) => {
     res.status(201).json({"result" : result, "message" : "buku berhasil ditambahkan ke wishlist"})
 })
 
+const deleteWishlist = asyncHandler(async(req,res,next) => {
+    /*
+        Ekspetasi body :
+        id_user : id user di db
+        id_buku : id buku pada db
+    */
+    const { id_buku, id_user } = req.body;
+    const adaBuku = await queryBuku.checkBukuPadaDB(id_buku);
+    if(!adaBuku) {
+        return res.status(400).json({message : "id buku tidak valid"})
+    }
+    const result = await queryWishlist.deleteWishlist({id_buku, id_user});
+    if(result.error) {
+        return res.status(400).json({message : result.error?.message})
+    }
+    res.status(201).json({"message" : "wishlist berhasil dihapus","result" : result, })
+})
+
 const addRating = asyncHandler(async(req,res,next) => {
     /*
         Ekspetasi body :
@@ -60,5 +78,6 @@ module.exports = {
     getAllUser,
     newUser,
     addWishlist,
-    addRating
+    addRating,
+    deleteWishlist
 }

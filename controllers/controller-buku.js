@@ -29,7 +29,44 @@ const getBukuByPenerbitId = asyncHandler(async(req,res,next) => {
     res.status(201).json({"result" : result.rows})
 })
 
+const searchBuku = asyncHandler(async(req,res,next) => {
+    /*
+        Ekspetasi query :
+        q : query search term
+    */
+    const { q } = req.query;
+    const result = await queryBuku.searchBuku(q);
+    if(result.error) {
+        return res.status(400).json({message : result.error?.message})
+    }
+    res.status(201).json({"result" : result.rows})
+})
+
+const insertBuku = asyncHandler(async(req,res,next) => {
+    /*
+        Ekspetasi body :
+        id_penulis (ARRAY),
+        id_penerbit,
+        nama_buku,
+        isbn,
+        tanggal_rilis,
+        halaman,
+        foto
+    */
+    const {id_penulis, id_penerbit, nama_buku, isbn, tanggal_rilis, halaman, foto} = req.body;
+    if(!Array.isArray(id_penulis)) {
+        return res.status(400).json({message : "id_penulis harus array"})
+    }
+    const result = await queryBuku.insertBukuBaru({id_penulis, id_penerbit, nama_buku, isbn, tanggal_rilis, halaman, foto});
+    if(result.error) {
+        return res.status(400).json({message : result.error?.message})
+    }
+    res.status(201).json({"message": "buku berhasil masuk database"})
+})
+
 module.exports = {
     getBukuByPenulisId,
-    getBukuByPenerbitId
+    getBukuByPenerbitId,
+    searchBuku,
+    insertBuku
 }
