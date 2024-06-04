@@ -30,11 +30,15 @@ CREATE VIEW public.buku_dengan_penulis AS
 SELECT buku.id AS id_buku,
         buku.judul AS judul_buku,
         buku.ISBN AS ISBN,
+        penerbit.nama AS nama_penerbit,
+        penerbit.id AS id_penerbit,
         penulis.nama,
 		penulis.id AS id_penulis
 FROM public.relasi_penulis_buku relasiPenulisBuku
 JOIN public.buku buku ON relasiPenulisBuku.id_buku = buku.id
-JOIN public.penulis penulis ON relasiPenulisBuku.id_penulis = penulis.id;
+JOIN public.penulis penulis ON relasiPenulisBuku.id_penulis = penulis.id
+JOIN public.penerbit penerbit ON penerbit.id = buku.penerbit
+;
 
 COMMIT;
 END;
