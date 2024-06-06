@@ -21,6 +21,8 @@ DB_PORT="
 environment=""
 ```
 
+Pada file `/models/ddl.sql` dan `/models/view.sql/` dapat dijalankan querynya pada database agar membuat tabel - tabel yang diperlukan aplikasi
+
 ## Installing
 Jika sudah memenuhi requirement maka tinggal clone  github ini 
 ```

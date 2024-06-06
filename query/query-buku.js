@@ -90,11 +90,12 @@ const insertBukuBaru = async ({id_penulis, id_penerbit, nama_buku, isbn, tanggal
 
         for(let i = 0; i < id_penulis.length; i++) {
             if(i == id_penulis.length - 1) {
-                query2 += `(${id_buku}, ${id_penulis});`
+                query2 += `(${id_buku}, ${id_penulis[i]});`
 
             }
-            else query2 += `(${id_buku}, ${id_penulis}),`
+            else query2 += `(${id_buku}, ${id_penulis[i]}),`
         }
+        //console.log("LANCAR", query2)
         await client.query(query2)
         await client.query("COMMIT")
         client.release();
