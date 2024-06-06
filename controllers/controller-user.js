@@ -30,7 +30,7 @@ const addWishlist = asyncHandler(async(req,res,next) => {
     if(result.error) {
         return res.status(400).json({message : result.error?.message})
     }
-    res.status(201).json({"result" : result, "message" : "buku berhasil ditambahkan ke wishlist"})
+    res.status(201).json({"message" : "buku berhasil ditambahkan ke wishlist"})
 })
 
 const deleteWishlist = asyncHandler(async(req,res,next) => {
@@ -48,7 +48,7 @@ const deleteWishlist = asyncHandler(async(req,res,next) => {
     if(result.error) {
         return res.status(400).json({message : result.error?.message})
     }
-    res.status(201).json({"message" : "wishlist berhasil dihapus","result" : result, })
+    res.status(201).json({"message" : "wishlist berhasil dihapus" })
 })
 
 const addRating = asyncHandler(async(req,res,next) => {
